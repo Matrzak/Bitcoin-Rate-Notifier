@@ -1,12 +1,16 @@
-import RPi.GPIO as GPIO
+import os
 import requests
 import time
 import pygame
 import bluetooth
 import matplotlib.pyplot as plt
+import RPi.GPIO as GPIO
+
 from RPLCD import CharLCD
 
+
 API_URL = "https://api.coindesk.com/v1/bpi/currentprice.json"
+PRIVATE_API_URL = "https://api.matrzak.pl/btcrate"
 LAST_RATE = None
 
 # Configure raspberry
@@ -101,11 +105,12 @@ def check_rate():
         return
 
     try:
+        global PRIVATE_API_URL
         data = {
-            "barear": "p7cznFIwwnl6mGzsJenIhO1KNzKYNj",
+            "barear": os.environ['BCN-BAREAR'],
             "rate": convert_rate
         }
-        requests.post("https://api.matrzak.pl/btcrate", json=data)
+        requests.post(PRIVATE_API_URL, json=data)
     except:
         pass
 
